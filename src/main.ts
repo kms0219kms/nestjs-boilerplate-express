@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { RedocModule, RedocOptions } from '@jozefazz/nestjs-redoc';
+import { NestjsRedoxModule } from 'nestjs-redox';
 
 import { AppModule } from './app.module';
 import { version } from '../package.json';
@@ -20,29 +20,32 @@ async function bootstrap() {
 
     const document = SwaggerModule.createDocument(app, config);
 
-    const redocOptions: RedocOptions = {
-      title: 'Specify your title here',
-    };
-
     await SwaggerModule.setup('docs', app, document);
-    await RedocModule.setup('redoc', app, document, redocOptions);
+    await NestjsRedoxModule.setup('redoc', app, document);
   }
 
   if (process.env.GLOBAL_CORS === '1') {
-    app.enableCors();
+    app.enableCors({
+      origin: '*',
+      credentials: true,
+    });
   } else {
     app.enableCors({
       origin: [
         // Specify your domains here
       ],
-      credentials: true,
+      // credentials: true,
     });
   }
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  await app.listen(3000, '0.0.0.0');
+  if (process.env.NODE_ENV === 'development') {
+    await app.listen(3000);
+  } else {
+    await app.listen(3000, '0.0.0.0');
+  }
 }
 
 bootstrap();

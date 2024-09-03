@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
-import { APIException } from '../dto/APIException.dto';
+import APIException from '../dto/APIException.dto';
 
 import { Response } from 'express';
 
