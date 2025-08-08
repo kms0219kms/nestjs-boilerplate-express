@@ -2,6 +2,11 @@ import { NestFactory } from '@nestjs/core'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { NestjsRedoxModule } from 'nestjs-redox'
 
+import {
+  ExpressAdapter,
+  NestExpressApplication,
+} from '@nestjs/platform-express'
+
 import { AppModule } from './app.module'
 import { version } from '../package.json'
 
@@ -9,7 +14,10 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter({ logger: true }),
+  )
 
   if (process.env.ENABLE_SWAGGER !== '0') {
     const config = new DocumentBuilder()
