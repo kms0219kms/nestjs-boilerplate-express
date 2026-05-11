@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common'
 
-import APIException from '../dto/APIException.dto'
+import APIException from '../dtos/APIException.dto'
 
 import { Response } from 'express'
 
